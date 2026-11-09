@@ -1,0 +1,67 @@
+NICKCHAT WEBSITE AND ANDROID APP: STEP BY STEP
+==============================================
+
+Files in this folder
+  index.html               Home page
+  app.html                 The messenger (the "Open Nickchat" button)
+  manifest.webmanifest     Makes the site installable as an Android app
+  sw.js                    Lets the installed app open even with a weak connection
+  icon-*.png, apple-*.png  App icons
+  Nickchat-1.0.exe         Windows installer (the "Download for Windows" button)
+  credits.txt              Credits
+
+Do not rename or delete any of these files. Upload all of them together.
+
+
+PART 1. PUT THE WEBSITE ONLINE (GitHub Pages, free)
+---------------------------------------------------
+1. Unzip Nickchat-Website.zip so you have the "website" folder with the files above.
+2. Go to https://github.com and press "Sign up". Make a free account and confirm your email.
+3. Sign in as ilhamkbrli915-lab. Press the "+" at the top right, then "New repository".
+   - Repository name: nickchat   (exactly this, all lowercase, no spaces)
+   - Choose "Public".
+   - Press "Create repository".
+4. On the new empty repository page press the link "uploading an existing file".
+5. Open your "website" folder. Select ALL the files inside it (Ctrl+A) and drag them
+   into the GitHub page. Drag the files, not the folder.
+6. Wait until every file shows in the list, then press "Commit changes".
+7. Open the repository's "Settings" tab, then "Pages" in the left menu.
+   Under "Build and deployment", set Source to "Deploy from a branch".
+   Set Branch to "main" and the folder to "/ (root)". Press "Save".
+8. Wait about one to two minutes and refresh the Pages screen. A line appears:
+   "Your site is live at https://ilhamkbrli915-lab.github.io/nickchat/"
+   That is your website. For you it will be:
+   https://ilhamkbrli915-lab.github.io/nickchat/
+   Send that address to your friends. Your files will be at
+   https://github.com/ilhamkbrli915-lab/nickchat
+
+If something looks wrong: wait two more minutes and press Ctrl+F5. Make sure
+index.html is directly in the repository, not inside another folder.
+
+Faster alternative: https://app.netlify.com/drop lets you drag the whole folder in
+and gives you an address at once. Free accounts may be asked to sign up to keep it.
+
+
+PART 2. INSTALL IT ON ANDROID (works after Part 1)
+--------------------------------------------------
+1. On the Android phone open Chrome and go to your website address.
+2. Tap the three dots at the top right.
+3. Tap "Install app" (or "Add to Home screen").
+4. Tap "Install". A Nickchat icon appears on the home screen.
+5. Open it. It runs full screen like a normal app, with no browser bars.
+   Log in with a nickname and add friends.
+
+Each phone keeps its own chats. Use Settings, then Back up chats, before you
+reinstall or change phone.
+
+
+PART 3 (OPTIONAL). TURN THE SITE INTO AN .APK FILE
+---------------------------------------------------
+You can make a real Android app file from your website for free:
+1. Go to https://www.pwabuilder.com and paste your website address.
+2. Press "Start", then "Package for stores", then choose "Android".
+3. Fill in the app name (Nickchat) and press "Generate".
+4. Download the zip. It contains the .apk (install it on a phone) and a signing
+   key file. Keep the signing key safe: you need it for every future update.
+To install an .apk file on a phone, allow "Install unknown apps" for the app you
+opened it from, when Android asks.

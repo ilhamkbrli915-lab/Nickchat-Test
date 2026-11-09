@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nickchat</title>
+<meta name="theme-color" content="#e0452b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="description" content="A messenger with voice and video calls. Sign up with a nickname and a password. No phone number.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+/* Layout: one hero (headline and buttons beside a live-looking chat), a feature list, three real steps, plain limits. */
+:root{
+  color-scheme:light;
+  --bg:#f3f5f7; --panel:#ffffff; --ink:#15202b; --muted:#5d6b79; --line:#dde3e9;
+  --accent:#e0452b; --accent-ink:#ffffff; --mine:#15202b; --mine-ink:#f3f5f7; --read:#5ab4f0; --on:#1f8a5b;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#0f151b; --panel:#17202a; --ink:#e8edf2; --muted:#98a5b2; --line:#26323e;
+  --accent:#ff6a4d; --accent-ink:#1a0d09; --mine:#e8edf2; --mine-ink:#0f151b; --read:#1e7fc4; --on:#4cc48a}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f151b; --panel:#17202a; --ink:#e8edf2; --muted:#98a5b2; --line:#26323e;
+  --accent:#ff6a4d; --accent-ink:#1a0d09; --mine:#e8edf2; --mine-ink:#0f151b; --read:#1e7fc4; --on:#4cc48a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-inline:max(20px,env(safe-area-inset-left,0px)) max(20px,env(safe-area-inset-right,0px));padding-block:max(16px,env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-bottom,0px))}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.015em}
+.wrap{max-width:1040px;margin-inline:auto}
+nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:8px 28px}
+.logo{font-family:var(--display);font-weight:800;font-size:24px;text-decoration:none}
+.logo i{font-style:normal;color:var(--accent)}
+nav .links{display:flex;gap:20px;font-size:15px}
+nav .links a{color:var(--muted);text-decoration:none}
+nav .links a:hover{color:var(--ink)}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:48px;align-items:center;padding-block:24px 56px}
+.hero h1{font-size:clamp(40px,6.4vw,68px);font-weight:800;line-height:1.02}
+.hero p.lead{font-size:19px;color:var(--muted);max-width:46ch;margin:18px 0 28px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:10px;font-weight:500;text-decoration:none;border:1px solid transparent}
+.btn.main{background:var(--accent);color:var(--accent-ink)}
+.btn.alt{background:var(--panel);border-color:var(--line)}
+.btn:hover{filter:brightness(.95)}
+.small{font-size:14px;color:var(--muted);margin-top:14px}
+
+/* the chat preview */
+.phone{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.12);max-width:420px;margin-inline:auto;width:100%}
+.ph-h{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;background:hsl(150 48% 38%);flex:none}
+.ph-h b{display:block;line-height:1.2;font-weight:500}
+.ph-h small{color:var(--on);font-size:13px}
+.ph-b{background:var(--bg);padding:14px;display:flex;flex-direction:column;gap:8px;min-height:300px}
+.b{max-width:80%;padding:7px 11px 5px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:15px;line-height:1.5}
+.b.me{align-self:flex-end;background:var(--mine);color:var(--mine-ink);border-color:var(--mine)}
+.b .t{display:block;text-align:right;font-size:11px;opacity:.75;margin-top:2px}
+.b .tk{letter-spacing:-3px;margin-right:3px}
+.b .tk.r{color:var(--read);opacity:1}
+.q{border-left:3px solid var(--accent);background:rgba(127,127,127,.16);border-radius:6px;padding:2px 8px;margin-bottom:4px;font-size:13px}
+.q b{display:block;font-size:12px;color:var(--accent);font-weight:500}
+.rx{align-self:flex-start;margin-top:-12px;margin-left:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0 7px;font-size:14px;position:relative}
+.typing{align-self:flex-start;color:var(--muted);font-size:14px}
+.ph-f{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.ph-f span{flex:1;padding:9px 14px;border:1px solid var(--line);border-radius:20px;color:var(--muted);font-size:15px;background:var(--bg)}
+.ph-f i{width:38px;height:38px;border-radius:50%;background:var(--accent);flex:none}
+
+section{padding-block:40px;border-top:1px solid var(--line)}
+section>h2{font-size:clamp(28px,4vw,38px);margin-bottom:8px}
+section>p.sub{color:var(--muted);margin:0 0 26px;max-width:56ch}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px 28px;list-style:none;margin:0;padding:0}
+.feat li{padding:12px 0;border-bottom:1px solid var(--line)}
+.feat b{display:block;font-weight:500}
+.feat span{color:var(--muted);font-size:15px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;counter-reset:s;list-style:none;margin:0;padding:0}
+.steps li{counter-increment:s}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--bg);font-family:var(--display);font-weight:800;margin-bottom:10px}
+.steps b{display:block;font-family:var(--display);font-size:20px;font-weight:600}
+.steps span{color:var(--muted)}
+.facts{display:grid;gap:10px;margin:0;padding:0;list-style:none;max-width:70ch}
+.facts li{padding-left:18px;position:relative}
+.facts li::before{content:"";position:absolute;left:0;top:.7em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+footer{border-top:1px solid var(--line);padding-top:24px;margin-top:16px;color:var(--muted);font-size:15px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (max-width:820px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:36px;padding-block:8px 40px}
+  nav .links a:not(.keep){display:none}
+}
+@media (prefers-reduced-motion:no-preference){.b,.typing,.rx{animation:in .5s ease-out both}.b:nth-child(2){animation-delay:.15s}.b:nth-child(3){animation-delay:.3s}.rx{animation-delay:.45s}.typing{animation-delay:.6s}@keyframes in{from{opacity:0;transform:translateY(6px)}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#top">Nick<i>chat</i></a>
+    <div class="links"><a href="#features">Features</a><a href="#how">How it works</a><a href="#android">Android</a><a href="#facts">Good to know</a><a class="keep" href="app.html">Open the app</a></div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div>
+      <h1>Chat, call and video call.</h1>
+      <p class="lead">Sign up with a nickname and a password, add a friend by theirs, then chat, call or video call. No phone number needed.</p>
+      <div class="cta">
+        <a class="btn main" href="app.html">Open Nickchat</a>
+        <a class="btn alt" href="Nickchat-1.0.exe" download>Download for Windows</a>
+        <button class="btn alt" id="installBtn" type="button" hidden>Install on this device</button>
+      </div>
+      <p class="small">Works in any browser. The Windows installer is about 3 MB and adds Nickchat to your Start menu.</p>
+    </div>
+    <div class="phone" aria-label="Example conversation">
+      <div class="ph-h"><span class="av">M</span><div><b>maya_k</b><small>online</small></div></div>
+      <div class="ph-b">
+        <div class="b">Are we still on for 7?</div>
+        <div class="b me"><div class="q"><b>maya_k</b>Are we still on for 7?</div>Yes. Bringing the tickets.<span class="t"><span class="tk r">✓✓</span>18:42</span></div>
+        <div class="rx">❤️</div>
+        <div class="typing">maya_k is typing…</div>
+      </div>
+      <div class="ph-f"><span>Write a message</span><i></i></div>
+    </div>
+  </header>
+
+  <section id="features">
+    <h2>The things you expect from a messenger</h2>
+    <p class="sub">All of it works with a nickname and a password.</p>
+    <ul class="feat">
+      <li><b>Sent, delivered, read</b><span>Ticks turn blue when your message is read.</span></li>
+      <li><b>Typing and last seen</b><span>See who is online and who is writing.</span></li>
+      <li><b>Replies and reactions</b><span>Quote a message or answer with an emoji.</span></li>
+      <li><b>Edit and delete</b><span>Fix a typo or remove a message for everyone.</span></li>
+      <li><b>Profile photos</b><span>Add your photo. Your contacts see it everywhere.</span></li>
+      <li><b>Themes</b><span>Pick an accent colour and an animated wallpaper.</span></li>
+      <li><b>Big emoji and effects</b><span>Send 🎉 or ❤️ and watch it burst across the chat.</span></li>
+      <li><b>Swipe to reply</b><span>Slide a message sideways to reply, with a springy animation.</span></li>
+      <li><b>Search everything</b><span>Find any message across all your chats.</span></li>
+      <li><b>Status</b><span>Post a colourful status for 24 hours and see who viewed it.</span></li>
+      <li><b>Calls tab</b><span>Call history with missed calls and one-tap call back.</span></li>
+      <li><b>Liquid glass design</b><span>A frosted glass tab bar that glides between Chats, Status and Calls.</span></li>
+      <li><b>Voice and video calls</b><span>Call a friend from the chat. Mute, turn the camera off, hang up.</span></li>
+      <li><b>Groups</b><span>Up to 30 people in one chat.</span></li>
+      <li><b>Pin, mute, block</b><span>Keep the important chats on top.</span></li>
+      <li><b>Search</b><span>Find a chat, or a word inside one.</span></li>
+      <li><b>Backup and restore</b><span>Move your chats to another device.</span></li>
+    </ul>
+  </section>
+
+  <section id="how">
+    <h2>Three steps</h2>
+    <ol class="steps">
+      <li><b>Sign up</b><span>Pick a nickname of 3 to 20 letters, digits, _ or -, and a password. A taken nickname cannot be used by anyone else.</span></li>
+      <li><b>Add a friend</b><span>Press + and type their exact nickname.</span></li>
+      <li><b>Chat</b><span>Messages arrive live while both of you have Nickchat open.</span></li>
+    </ol>
+  </section>
+
+  <section id="android">
+    <h2>On your Android phone</h2>
+    <p class="sub">Nickchat installs like a normal app. It gets its own icon and opens full screen, with no browser bars.</p>
+    <ol class="steps">
+      <li><b>Open this page in Chrome</b><span>Use the phone you want to install it on.</span></li>
+      <li><b>Tap the menu</b><span>The three dots at the top right, then "Install app" or "Add to Home screen".</span></li>
+      <li><b>Open Nickchat</b><span>Find the new icon on your home screen and log in with a nickname and a password.</span></li>
+    </ol>
+  </section>
+
+  <section id="facts">
+    <h2>Good to know</h2>
+    <p class="sub">Nickchat is simple on purpose. These are the trade-offs.</p>
+    <ul class="facts">
+      <li>Your chats are saved in the browser or app you use. Use Settings, then Back up chats, before you clear browser data or change device.</li>
+      <li>Messages travel through a free public relay, so do not send anything secret.</li>
+      <li>A nickname belongs to the first person who signs up with it. Your password is never sent anywhere, only a scrambled code of it. Forgotten passwords cannot be recovered. If you stay away for over 12 hours the lock can expire.</li>
+      <li>If someone is offline for more than about 12 hours, they miss the message.</li>
+      <li>Photos and voice messages are not supported. Calls are one to one and may fail on very strict networks.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Nickchat 1.5. Project by Ilham. Built with Claude.</span>
+    <span><a href="credits.txt">Credits</a></span>
+  </footer>
+</div>
+<script>
+var dp=null;
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;document.getElementById("installBtn").hidden=false});
+document.getElementById("installBtn").addEventListener("click",function(){if(!dp)return;dp.prompt();dp.userChoice.finally(function(){dp=null;document.getElementById("installBtn").hidden=true})});
+window.addEventListener("appinstalled",function(){document.getElementById("installBtn").hidden=true});
+if("serviceWorker"in navigator&&/^https?:$/.test(location.protocol)){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+</script>
+</body>
+</html>
